@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="HierarchyAccountsSystem.Api/HierarchyAccountsSystem.Api.csproj" />
+  <Project Path="HierarchyAccountsSystem.BusinessLogic/HierarchyAccountsSystem.BusinessLogic.csproj" Id="d71bb938-f9e1-43be-8606-311fe071994a" />
+</Solution>
