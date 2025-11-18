@@ -1,10 +1,20 @@
 using Asp.Versioning;
+using HierarchyAccountsSystem.Api;
+using HierarchyAccountsSystem.BusinessLogic.Contracts;
+using HierarchyAccountsSystem.BusinessLogic.Contracts.Mappers;
+using HierarchyAccountsSystem.BusinessLogic.DataContext;
 using HierarchyAccountsSystem.BusinessLogic.Models;
+using HierarchyAccountsSystem.BusinessLogic.Services;
+using HierarchyAccountsSystem.BusinessLogic.Services.Mappers;
+using HierarchyAccountsSystem.BusinessLogic.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<HASDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), optionsBuilder => optionsBuilder.MigrationsAssembly("HierarchyAccountsSystem.Api")));
+
+builder.Services.AddScoped<IMapper<Account, HierarhycalAccount>, HierarhycalAccountMapper>();
+builder.Services.AddScoped<IHierarhyAccountService, HierarhyAccountService>();
 
 builder.Services.AddControllers().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
 builder.Services.AddEndpointsApiExplorer();

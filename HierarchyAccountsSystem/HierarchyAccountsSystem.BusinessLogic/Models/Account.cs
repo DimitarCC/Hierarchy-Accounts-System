@@ -4,15 +4,13 @@ using System.Collections.Generic;
 namespace HierarchyAccountsSystem.BusinessLogic.Models;
 
 public partial class Account {
-  public int AccountId { get; set; }
+  public Int32 AccountId { get; set; }
 
-  public string Name { get; set; } = null!;
+  public String Name { get; set; } = null!;
 
-  public int? ParentAccountId { get; set; }
+  public Int32? ParentAccountId { get; set; }
 
-  // Store hierarchyid as string in EF Core
-  // (SQL Server column type will be hierarchyid)
-  public string AccountNodePath { get; set; } = string.Empty;
+  public HierarchyPath AccountNodePath { get; set; } = HierarchyPath.Root;
 
   public virtual ICollection<Account> Children { get; set; } = new List<Account>();
 
