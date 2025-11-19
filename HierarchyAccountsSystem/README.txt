@@ -68,3 +68,17 @@ IV. Testing via the written unit tests
     2. To run the tests, open the Test Explorer in Visual Studio (Test > Test Explorer) and click on "Run All" to execute all tests.
 
     3. Review the test results in the Test Explorer window.
+
+V. Running the console application
+    1. The console application is located in the ConsoleApp project.
+
+    2. Before running the console application, ensure that the API project is running and the database is accessible.
+
+    3. Set the ApiBaseUrl variable in the appconfig.json in ConsoleApp.exe directory to point to the running API instance (e.g., http://localhost:5000).
+    3.a. Optionally can set an environment variable API_BASEURL that will be used instead of the value in the appconfig.json
+
+    4. In terminal navigate to the console app installation directory (where you have put the built ConsoleApp.exe).
+
+    5. Run the console application by executing the command: ConsoleApp.exe
+    5.a. If you not specify arguments to the command it will run in interactive mode where you can enter the desired accountId.
+    5.b. You can also provide accountId as argument to the command like this: ConsoleApp.exe <accountId> or ConsoleApp.exe --accountId <accountId>

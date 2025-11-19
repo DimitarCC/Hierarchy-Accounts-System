@@ -6,7 +6,7 @@ I. Database schema design
     - Closure table
 
   It is decided to go in materialized path approach due to that we have simple requirement and dont expect huge load over the api.
-  As wel as Materialized path approach gives possibility to enforce restriction and protection on database level as well and not only in-code.
+  As well as Materialized path approach gives possibility to enforce restriction and protection on database level as well and not only in-code.
 
   TABLE STRUCTURE ([dbo].[Accounts]):
 	  [AccountID] [int] NOT NULL, PK Its the uniqie account identifier holding sequental values
@@ -34,3 +34,8 @@ III. Migrations and database creation
   - Entity Framework Core is used for database access and migrations.
   - On application startup, pending migrations are applied automatically to ensure the database schema is up-to-date.
   - Initial seeding of the master root account is performed if it does not exist.
+
+IV. Console application
+  - A simple console application is provided with basic functionality to only print the tree of specified account or if account not specified print the whole tree.
+  - It includes custom basic ApiClient class to interact with the API endpoints.
+  - The console application accepts command-line arguments for account ID.
