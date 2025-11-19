@@ -4,6 +4,7 @@ using HierarchyAccountsSystem.BusinessLogic.DataContext;
 using HierarchyAccountsSystem.BusinessLogic.Models;
 using HierarchyAccountsSystem.BusinessLogic.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Linq;
 
@@ -55,9 +56,12 @@ public class HierarhyAccountService : IHierarhyAccountService {
       return this._Mapper.ToViewModel(root);
     }
 
-    using var transaction = await this._Db.Database.BeginTransactionAsync();
-
+    IDbContextTransaction? transaction = null;
     try {
+      if (this._Db.Database.IsRelational()) {
+        transaction = await this._Db.Database.BeginTransactionAsync();
+      }
+
       // Load parent
       var parent = await this._Db.Accounts
           .FirstOrDefaultAsync(a => a.AccountId == parentId);
@@ -86,19 +90,23 @@ public class HierarhyAccountService : IHierarhyAccountService {
       this._Db.Accounts.Add(child);
       await this._Db.SaveChangesAsync();
 
-      await transaction.CommitAsync();
-
+      if (transaction != null) await transaction.CommitAsync();
       return this._Mapper.ToViewModel(child);
     } catch {
-      await transaction.RollbackAsync();
+      if (transaction != null) await transaction.RollbackAsync();
       throw;
+    } finally {
+      if (transaction != null) await transaction.DisposeAsync();
     }
   }
 
   public async Task<HierarhycalAccount> UpdateAccountAsync(Int32 accountId, Int32? newParentId) {
-    using var transaction = await this._Db.Database.BeginTransactionAsync();
-
+    IDbContextTransaction? transaction = null;
     try {
+      if (this._Db.Database.IsRelational()) {
+        transaction = await this._Db.Database.BeginTransactionAsync();
+      }
+
       // Load node (tracked)
       var node = await this._Db.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId);
       if (node == null) {
@@ -180,18 +188,24 @@ public class HierarhyAccountService : IHierarhyAccountService {
       }
 
       await this._Db.SaveChangesAsync();
-      await transaction.CommitAsync();
+
+      if (transaction != null) await transaction.CommitAsync();
       return this._Mapper.ToViewModel(node);
     } catch {
-      await transaction.RollbackAsync();
+      if (transaction != null) await transaction.RollbackAsync();
       throw;
+    } finally {
+      if (transaction != null) await transaction.DisposeAsync();
     }
   }
 
   public async Task RemoveAccountAsync(Int32 accountId) {
-    using var transaction = await this._Db.Database.BeginTransactionAsync();
-
+    IDbContextTransaction? transaction = null;
     try {
+      if (this._Db.Database.IsRelational()) {
+        transaction = await this._Db.Database.BeginTransactionAsync();
+      }
+
       var node = await this._Db.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId);
       if (node == null) {
         throw new InvalidOperationException("Account not found");
@@ -259,10 +273,14 @@ public class HierarhyAccountService : IHierarhyAccountService {
       this._Db.Accounts.Remove(node);
 
       await this._Db.SaveChangesAsync();
-      await transaction.CommitAsync();
+
+      if (transaction != null) await transaction.CommitAsync();
     } catch {
-      await transaction.RollbackAsync();
+      if (transaction != null) await transaction.RollbackAsync();
       throw;
+    } finally {
+      if (transaction != null) await transaction.DisposeAsync();
     }
   }
+
 }
