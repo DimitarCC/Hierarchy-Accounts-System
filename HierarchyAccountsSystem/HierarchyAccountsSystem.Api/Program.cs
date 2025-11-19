@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using HierarchyAccountsSystem.Api;
+using HierarchyAccountsSystem.Api.Extensions;
 using HierarchyAccountsSystem.BusinessLogic.Contracts;
 using HierarchyAccountsSystem.BusinessLogic.Contracts.Mappers;
 using HierarchyAccountsSystem.BusinessLogic.DataContext;
@@ -14,10 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<HASDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), optionsBuilder => optionsBuilder.MigrationsAssembly("HierarchyAccountsSystem.Api")));
 
 builder.Services.AddScoped<IMapper<Account, HierarhycalAccount>, HierarhycalAccountMapper>();
+
 builder.Services.AddScoped<IHierarhyAccountService, HierarhyAccountService>();
 
 builder.Services.AddControllers().AddJsonOptions(opts => opts.JsonSerializerOptions.PropertyNamingPolicy = null);
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddApiVersioning(o => {
   o.ReportApiVersions = true;
   o.AssumeDefaultVersionWhenUnspecified = true;
@@ -36,6 +39,7 @@ builder.Services.AddSwaggerGen(options => {
 var app = builder.Build();
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
@@ -43,5 +47,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSeeding();
 
 app.Run();

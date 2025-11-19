@@ -26,13 +26,14 @@ public partial class HASDbContext : DbContext {
       entity.HasKey(e => e.AccountId);
 
       entity.ToTable(tb => {
-        tb.HasTrigger("trg_Accounts_CycleProtection");
+        tb.HasTrigger("TR_Accounts_PreventCycles");
+        tb.HasTrigger("TR_Accounts_OneRoot");
         // Depth constraint (max 5 levels. Master root is at 0)
         tb.HasCheckConstraint("CK_AccountNodes_MaxDepth", "(LEN(AccountNodePath) - LEN(REPLACE(AccountNodePath, '/', ''))) <= 5");
         tb.HasCheckConstraint("CK_AccountNodes_RootPath", "(ParentAccountID IS NOT NULL) OR (AccountNodePath = '/')");
       });
 
-      entity.Property(e => e.AccountId).HasColumnName("AccountID");
+      entity.Property(e => e.AccountId).HasColumnName("AccountID").ValueGeneratedNever();
       entity.Property(e => e.Name).HasMaxLength(200);
       entity.Property(e => e.ParentAccountId).HasColumnName("ParentAccountID");
 
