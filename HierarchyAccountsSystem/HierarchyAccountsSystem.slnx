@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Notes.txt" />
+    <File Path="README.txt" />
+  </Folder>
   <Project Path="HierarchyAccountsSystem.Api/HierarchyAccountsSystem.Api.csproj" />
   <Project Path="HierarchyAccountsSystem.BusinessLogic/HierarchyAccountsSystem.BusinessLogic.csproj" Id="d71bb938-f9e1-43be-8606-311fe071994a" />
   <Project Path="HierarchyAccountsSystem.Tests/HierarchyAccountsSystem.Tests.csproj" Id="29976241-bd08-4a9f-99ee-c3511e9251ed" />

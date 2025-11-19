@@ -129,7 +129,8 @@ public class HierarhyAccountService : IHierarhyAccountService {
       HierarchyPath? newNodePath;
       HierarchyPath parentPath;
       if (newParentId == null) {
-        // Move to root: ensure no other root exists (except this node)
+        // Move to root: ensure no other root exists (except this node).
+        // !!! This should generally not ever happen !!!
         var existingRoot = allAccounts.FirstOrDefault(a => a.ParentAccountId == null && a.AccountId != node.AccountId);
         if (existingRoot != null) {
           throw new InvalidOperationException("Root account already exists");

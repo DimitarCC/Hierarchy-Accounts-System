@@ -1,0 +1,36 @@
+I. Database schema design
+
+  In order to achieve the required hierarhical structure there were several possible approaches:
+    - Adjacent table 
+    - Materialized path (that includes SQL Server built-in HierarhyId routines)
+    - Closure table
+
+  It is decided to go in materialized path approach due to that we have simple requirement and dont expect huge load over the api.
+  As wel as Materialized path approach gives possibility to enforce restriction and protection on database level as well and not only in-code.
+
+  TABLE STRUCTURE ([dbo].[Accounts]):
+	  [AccountID] [int] NOT NULL, PK Its the uniqie account identifier holding sequental values
+	  [Name] [nvarchar](200) NOT NULL, The name of the account
+	  [ParentAccountID] [int] NULL, Parent account unique ID (if NULL then this is master root)
+	  [AccountNodePath] [nvarchar](400) NOT NULL, Materialized path generated for each tree node in format / (master root), /1/, /1/2/
+
+  CONSTRAINTS:
+    - CK_AccountNodes_MaxDepth - used to enforce max depth limitation to 5
+    - CK_AccountNodes_RootPath - used to enforce correct format for master root node materialized path
+
+  TRIGGERS:
+    - TR_Accounts_OneRoot - used to enforce guarding on eventual attempt to create second master root node in the tree (in case the application code detection fails)
+    - TR_Accounts_PreventCycles - used to enforce guarding of eventual cyclec that can happen on adding or moving nodes in the tree
+
+
+II. API design
+  - The API is designed in RESTful manner following best practices.
+  - Versioning is implemented via URL segmenting (v1).
+  - Endpoints are grouped by resources (account).
+  - Standard HTTP methods are used (GET, POST, PUT).
+  - Responses include appropriate HTTP status codes and messages.
+
+III. Migrations and database creation
+  - Entity Framework Core is used for database access and migrations.
+  - On application startup, pending migrations are applied automatically to ensure the database schema is up-to-date.
+  - Initial seeding of the master root account is performed if it does not exist.
